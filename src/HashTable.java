@@ -41,7 +41,7 @@ public class HashTable<K, V> {
 
             if (size >= upperTol * M && capacityIndex + 1 < capacity.length) {
                 capacityIndex++;
-                resize(capacityIndex);
+                resize(capacity[capacityIndex]);
             }
         }
 
@@ -49,17 +49,8 @@ public class HashTable<K, V> {
 
     private void resize(int newM) {
         TreeMap<K, V>[] treeMap = new TreeMap[newM];
-        int oldM = this.M;
-        this.M = newM;
-        for (int i = 0; i < oldM; i++) {
-            TreeMap<K, V> map = hashTable[i];
-            if (map == null) {
-                map = new TreeMap<>();
-            }
-            for (K key : map.keySet()) {
-                treeMap[hash(key)].put(key, map.get(key));
-            }
-        }
+        System.arraycopy(hashTable, 0, treeMap, 0, M - 1);
+        M = newM;
         hashTable = treeMap;
     }
 
@@ -71,7 +62,7 @@ public class HashTable<K, V> {
             size--;
             if (size >= upperTol * M && capacityIndex - 1 >= 0) {
                 capacityIndex--;
-                resize(capacityIndex);
+                resize(capacity[capacityIndex]);
             }
         }
         return ret;
